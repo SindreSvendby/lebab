@@ -427,6 +427,23 @@ describe('Classes', () => {
       );
     });
 
+    it('ExportNamedDeclaration bug fix', () => {
+      expectTransform(
+        `export var SkinnedMesh = function SkinnedMesh() {
+        };
+
+        SkinnedMesh.prototype.update = function (camera) {
+          this.camera = camera;
+        };`
+      ).toReturn(`
+        class SkinnedMesh {
+          update(camera) {
+            this.camera = camera;
+          }
+        };
+      `);
+    });
+
     it('should preserve class with constructor comments', () => {
       expectTransform(
         '/** My nice class. */\n' +
